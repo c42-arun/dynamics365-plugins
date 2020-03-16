@@ -64,6 +64,7 @@
     <Compile Include="MyFirstPlugin.cs" />
     <Compile Include="OnContactCreateNewTaskPlugin.cs" />
     <Compile Include="OnContactSaveDuplicateEmailCheckPlugin.cs" />
+    <Compile Include="OnContactUpdatePreEntityImageDemoPlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
