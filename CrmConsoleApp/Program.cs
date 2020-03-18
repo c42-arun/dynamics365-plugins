@@ -1,4 +1,5 @@
-﻿using Microsoft.Xrm.Sdk;
+﻿using Cloud42;
+using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Client;
 using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Xrm.Tooling.Connector;
@@ -30,7 +31,8 @@ namespace CrmConsoleApp
             // CreateContact(client);
             // GetContactsUsingFetchQuery(client);
             //GetContactsUsingLinq(client);
-            GetContactsWithAccountsUsingLinq(client);
+            //GetContactsWithAccountsUsingLinq(client);
+            GetContactsWithAccountsUsingLinqAndStronglyTypedClasses(client);
 
             Console.ReadLine();
         }
@@ -68,6 +70,32 @@ namespace CrmConsoleApp
                               {
                                   ContactName = c["fullname"],
                                   AccountName = a["name"]
+                              };
+
+                foreach (var r in records)
+                {
+                    Console.WriteLine($"{r.ContactName} - {r.AccountName}");
+                }
+            }
+        }
+
+        /// <summary>
+        /// CrmSvcUtil.exe /interactivelogin /out:CrmEntities.cs /namespace:Cloud42 /serviceContextName:ServiceContext
+        /// </summary>
+        /// <param name="client"></param>
+        private static void GetContactsWithAccountsUsingLinqAndStronglyTypedClasses(CrmServiceClient client)
+        {
+            using (ServiceContext context = new ServiceContext(client))
+            {
+                var records = from c in context.ContactSet
+                              join
+                              a in context.AccountSet
+                              on c.ParentCustomerId.Id equals a.AccountId
+                              where c.ParentCustomerId != null
+                              select new
+                              {
+                                  ContactName = c.FullName,
+                                  AccountName = a.Name
                               };
 
                 foreach (var r in records)
