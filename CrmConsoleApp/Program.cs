@@ -3,6 +3,7 @@ using Microsoft.Xrm.Sdk.Client;
 using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Xrm.Tooling.Connector;
 using System;
+using System.Activities.Expressions;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -28,7 +29,8 @@ namespace CrmConsoleApp
 
             // CreateContact(client);
             // GetContactsUsingFetchQuery(client);
-            GetContactsUsingLinq(client);
+            //GetContactsUsingLinq(client);
+            GetContactsWithAccountsUsingLinq(client);
 
             Console.ReadLine();
         }
@@ -53,6 +55,27 @@ namespace CrmConsoleApp
             }
         }
 
+        private static void GetContactsWithAccountsUsingLinq(CrmServiceClient client)
+        {
+            using (OrganizationServiceContext context = new OrganizationServiceContext(client))
+            {
+                var records = from c in context.CreateQuery("contact")
+                              join
+                              a in context.CreateQuery("account")
+                              on c["parentcustomerid"] equals a["accountid"]
+                              where c["parentcustomerid"] != null
+                              select new
+                              {
+                                  ContactName = c["fullname"],
+                                  AccountName = a["name"]
+                              };
+
+                foreach (var r in records)
+                {
+                    Console.WriteLine($"{r.ContactName} - {r.AccountName}");
+                }
+            }
+        }
         private static void GetContactsUsingFetchQuery(CrmServiceClient client)
         {
             FetchExpression fetchQuery = new FetchExpression(@"<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>
