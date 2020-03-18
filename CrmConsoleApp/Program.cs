@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xrm.Sdk;
+using Microsoft.Xrm.Sdk.Client;
 using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Xrm.Tooling.Connector;
 using System;
@@ -26,9 +27,30 @@ namespace CrmConsoleApp
             }
 
             // CreateContact(client);
-            GetContactsUsingFetchQuery(client);
+            // GetContactsUsingFetchQuery(client);
+            GetContactsUsingLinq(client);
 
             Console.ReadLine();
+        }
+
+        private static void GetContactsUsingLinq(CrmServiceClient client)
+        {
+            using (OrganizationServiceContext context = new OrganizationServiceContext(client))
+            {
+                // get all contacts
+                var contacts = context.CreateQuery("contact").ToList();
+
+                int id = 1;
+                foreach (var c in contacts)
+                {
+                    if (!c.Attributes.ContainsKey("fullname"))
+                        Console.Write($"{id}: ");
+                    else
+                        Console.WriteLine(c.Attributes["fullname"]);
+
+                    id++;
+                }
+            }
         }
 
         private static void GetContactsUsingFetchQuery(CrmServiceClient client)
