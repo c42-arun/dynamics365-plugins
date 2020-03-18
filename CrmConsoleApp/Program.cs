@@ -46,7 +46,7 @@ namespace CrmConsoleApp
                     if (!c.Attributes.ContainsKey("fullname"))
                         Console.Write($"{id}: ");
                     else
-                        Console.WriteLine(c.Attributes["fullname"]);
+                        Console.WriteLine(c["fullname"]);
 
                     id++;
                 }
