@@ -1,6 +1,7 @@
 ﻿using Cloud42;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Client;
+using Microsoft.Xrm.Sdk.Messages;
 using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Xrm.Tooling.Connector;
 using System;
@@ -30,9 +31,10 @@ namespace CrmConsoleApp
 
             // CreateContact(client);
             // GetContactsUsingFetchQuery(client);
-            //GetContactsUsingLinq(client);
-            //GetContactsWithAccountsUsingLinq(client);
-            GetContactsWithAccountsUsingLinqAndStronglyTypedClasses(client);
+            // GetContactsUsingLinq(client);
+            // GetContactsWithAccountsUsingLinq(client);
+            // GetContactsWithAccountsUsingLinqAndStronglyTypedClasses(client);
+            BatchCreateEntitiesUsingServiceExecute(client);
 
             Console.ReadLine();
         }
@@ -119,6 +121,7 @@ namespace CrmConsoleApp
               </entity>
             </fetch>");
 
+            // RetrieveMultiple() is simply a helper wrapper around Execute(<RetrieveMultipleRequest>)
             EntityCollection collection = client.RetrieveMultiple(fetchQuery);
 
             foreach (Entity contact in collection.Entities)
@@ -134,9 +137,37 @@ namespace CrmConsoleApp
             contact.Attributes.Add("firstname", "Arun");
             contact.Attributes.Add("emailaddress1", "test@contact.com");
 
+            // Create() is simply a helper wrapper around Execute(<CreateRequest>)
             Guid guid = client.Create(contact);
 
             Console.WriteLine(guid);
+        }
+
+        private static void BatchCreateEntitiesUsingServiceExecute(CrmServiceClient client)
+        {
+            Entity contact = new Entity("contact");
+            contact.Attributes.Add("lastname", "Kumar");
+            contact.Attributes.Add("firstname", "Arun");
+            contact.Attributes.Add("emailaddress1", "test2@contact.com");
+
+            Account account = new Account
+            {
+                Name = "Cloud 42 Main Account"
+            };
+
+            ExecuteMultipleRequest multipleRequest = new ExecuteMultipleRequest() { 
+                Requests = new OrganizationRequestCollection(),
+                Settings = new ExecuteMultipleSettings { ContinueOnError = true, ReturnResponses = true }
+            };
+            multipleRequest.Requests.AddRange(new[] {
+                new CreateRequest { Target = contact },
+                new CreateRequest { Target = account }
+            });
+
+            ExecuteMultipleResponse multipleResponse = (ExecuteMultipleResponse) client.Execute(multipleRequest);
+
+            foreach(var response in multipleResponse.Responses)
+                Console.WriteLine(response.Response);
         }
     }
 }
