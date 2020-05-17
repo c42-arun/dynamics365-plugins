@@ -11,6 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrmConsoleApp", "CrmConsole
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Client Scripts", "Client Scripts", "{76DD332B-285A-4D50-9956-9841257C3645}"
 	ProjectSection(SolutionItems) = preProject
+		AccountScripts.js = AccountScripts.js
 		ContactScripts.js = ContactScripts.js
 	EndProjectSection
 EndProject
