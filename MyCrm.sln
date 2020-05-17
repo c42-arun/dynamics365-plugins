@@ -9,6 +9,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyCustomWorkflows", "MyCust
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrmConsoleApp", "CrmConsoleApp\CrmConsoleApp.csproj", "{4E0301EE-CB0D-4156-AFD7-0AC297BB6F9B}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Client Scripts", "Client Scripts", "{76DD332B-285A-4D50-9956-9841257C3645}"
+	ProjectSection(SolutionItems) = preProject
+		ContactScripts.js = ContactScripts.js
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
