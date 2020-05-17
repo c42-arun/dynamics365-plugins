@@ -16,6 +16,17 @@ var Sdk = window.Sdk || {};
         //var firstName = formContext.getAttribute("firstname").getValue();
 
         //alert("Hello " + firstName);
+
+        var formContext = executionContext.getFormContext();
+
+        var lookupArray = formContext.getAttribute("parentcustomerid").getValue();
+        if (lookupArray[0] !== null) {
+            var account = lookupArray[0];
+
+            formContext.ui.setFormNotification("GUID of account is " + account.id, "INFO", "1");
+            formContext.ui.setFormNotification("Name of account is " + account.name, "INFO", "2");
+            formContext.ui.setFormNotification("Entity type is " + account.entityType, "INFO", "3");
+        }
     }
 
     this.shippingMethodOnChange = (executionContext) => {
